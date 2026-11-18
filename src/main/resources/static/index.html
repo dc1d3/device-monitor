@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Монитор телефона</title>
+    <script>
+        // тема применяется до отрисовки, чтобы не было вспышки светлого фона
+        (function () {
+            var saved = null;
+            try { saved = localStorage.getItem('device-monitor-theme'); } catch (e) { }
+            var dark = saved ? saved === 'dark'
+                : window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+        })();
+    </script>
+    <link rel="stylesheet" href="style.css?v=8">
+</head>
+<body>
+<main class="wrap">
+    <header class="head">
+        <div>
+            <h1>Монитор телефона</h1>
+            <p class="sub">Данные читаются с Android-устройства через ADB</p>
+        </div>
+        <div class="head__actions">
+            <span id="status" class="pill pill--wait">Подключение…</span>
+            <button id="refresh" class="btn btn--head" type="button">Обновить</button>
+            <button id="theme-toggle" class="icon-btn" type="button"
+                    aria-label="Переключить тему" title="День / ночь">
+                <svg class="icon icon--moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"
+                          fill="none" stroke="currentColor" stroke-width="2"
+                          stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <svg class="icon icon--sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2"/>
+                        <path d="M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/>
+                    </g>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <div id="error" class="banner" hidden></div>
+
+    <section class="grid">
+        <article class="card" id="battery-card">
+            <h2>Заряд</h2>
+            <div class="battery">
+                <div class="battery__value">
+                    <span id="battery-level">—</span><span class="unit">%</span>
+                </div>
+                <div class="battery__bar">
+                    <div id="battery-fill" class="battery__fill"></div>
+                </div>
+                <p id="battery-state" class="muted">—</p>
+            </div>
+        </article>
+
+        <article class="card">
+            <h2>Устройство</h2>
+            <dl class="rows">
+                <div class="row"><dt>Имя</dt><dd id="device-name">—</dd></div>
+                <div class="row"><dt>Модель</dt><dd id="device-model">—</dd></div>
+                <div class="row"><dt>Производитель</dt><dd id="device-manufacturer">—</dd></div>
+                <div class="row"><dt>Android</dt><dd id="device-android">—</dd></div>
+            </dl>
+        </article>
+
+        <article class="card">
+            <h2>Память</h2>
+            <div class="storage">
+                <div class="storage__top">
+                    <span><span id="storage-free">—</span> <span class="unit">ГБ свободно</span></span>
+                    <span class="muted">из <span id="storage-total">—</span> ГБ</span>
+                </div>
+                <div class="storage__bar">
+                    <div id="storage-fill" class="storage__fill"></div>
+                </div>
+                <p class="muted">Занято: <span id="storage-used">—</span> ГБ</p>
+            </div>
+        </article>
+    </section>
+
+    <section class="card card--wide">
+        <div class="card-head">
+            <h2>Динамика</h2>
+            <span class="muted" id="chart-note">собираем данные…</span>
+        </div>
+        <div class="charts">
+            <div class="chart">
+                <div class="chart__top">
+                    <span class="muted">Заряд</span>
+                    <b id="chart-battery-last">—</b>
+                </div>
+                <canvas id="chart-battery" class="chart__canvas"></canvas>
+            </div>
+            <div class="chart">
+                <div class="chart__top">
+                    <span class="muted">Свободно, ГБ</span>
+                    <b id="chart-storage-last">—</b>
+                </div>
+                <canvas id="chart-storage" class="chart__canvas"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <section class="card card--wide">
+        <div class="card-head">
+            <h2>Экран телефона</h2>
+            <button id="screen-btn" class="btn" type="button">Снять экран</button>
+        </div>
+        <div class="screen">
+            <p id="screen-hint" class="muted">Нажмите «Снять экран» — картинка придёт с телефона через adb.</p>
+            <img id="screen-img" alt="Экран телефона" hidden>
+        </div>
+    </section>
+
+    <footer class="foot">
+        <span id="updated" class="muted">Обновление: —</span>
+    </footer>
+</main>
+<script src="app.js?v=8"></script>
+</body>
+</html>
