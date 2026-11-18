@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+app:
+  device:
+    # true — показывать фейковые данные (телефон не нужен)
+    mock: false
+    # путь к adb; "adb" — искать в PATH
+    adb-path: ${ADB_PATH:adb}
+    timeout-ms: 4000
+    # кэш снимка, мс
+    cache-ms: 5000
+
+# Интерактивная документация: /swagger-ui.html
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+logging:
+  level:
+    com.example.devicemonitor: info

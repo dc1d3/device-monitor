@@ -1,0 +1,17 @@
+# Нормализуем переводы строк в Git, чтобы сборка не зависела от ОС.
+* text=auto
+
+# Windows-скрипты должны остаться с CRLF
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Unix-скрипты и Maven Wrapper — только LF
+mvnw text eol=lf
+*.sh text eol=lf
+
+# Бинарные файлы не трогаем
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.jar binary
+*.zip binary
