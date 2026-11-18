@@ -151,7 +151,8 @@ public class AdbDeviceDataSource implements DeviceDataSource {
         boolean finished = process.waitFor(timeout.toMillis(), TimeUnit.MILLISECONDS);
         if (!finished) {
             process.destroyForcibly();
-            reader.join();
+            // не ждём читателя бесконечно: поток уже не нужен, а запрос не должен зависнуть
+            reader.join(1000);
             throw new IOException("adb не ответил за " + timeout.toMillis() + " мс");
         }
         reader.join();
